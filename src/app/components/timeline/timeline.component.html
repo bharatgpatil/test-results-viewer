@@ -1,0 +1,23 @@
+<div class="keyboard-message" *ngIf="testsData!==undefined">
+    <span>Use Keyboard 'Left/Right' arrow keys to navigate the timeline and automatically select an action.</span>
+</div>
+<div class="timeline" id="">
+  <div class="list-group mb-3" jlKeyboardNav>
+      <div id="line" [ngStyle]="{'background-color': computedStyle['background-color'], 'height': computedStyle.height}" class="list-group-element" *ngFor="let action of testsData; let i = index; let n = testsData">
+        <button id="button_{{action['Action-Id']}}"
+          type="button"
+          jlKeyboardNavItem
+          (click)="sendActionId($event, action['Action-Id'])"
+          ngClass="{{getClassList(action)}}"
+          [attr.data-action-id]="action['Action-Id']"
+          #item>
+        </button>
+
+        <div class="popupSpan">{{action['Action-Id']}}</div>
+
+        <div class="arrow"  [ngStyle]="{'width': computedStyle.width}" *ngIf="i < testsData.length-1">
+          <div align="center">{{computeTime(i)}}</div>
+        </div>
+      </div>
+  </div>
+</div>

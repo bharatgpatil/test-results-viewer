@@ -1,0 +1,136 @@
+
+.timeline {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  position: none !important;
+  scrollbar-width: thin !important;
+  padding: 10px;
+}
+
+.keyboard-message {
+  text-align: right; 
+  font-size: 10px; 
+  font-style: italic; 
+}
+
+.list-group {
+  margin: 40px 0 0 0px;
+  display: block !important;
+  .list-group-item {
+    display: inline-block !important;
+    position: absolute;
+    display: block;
+    margin-bottom: -1px;
+    padding: 7px !important;
+    
+    &:nth-last-child(2) {
+      top: -24px !important;
+    }
+
+  }
+ 
+}
+
+.list-item-success {
+  background-color: #2dce89;
+}
+
+.item-selected-success-border {
+  border: 3px solid #2dce89 !important;
+}
+
+.item-selected-danger-border {
+  border: 3px solid #fb6340 !important;
+}
+
+.list-item-danger {
+  background-color: #fb6340;
+}
+
+.text-left {
+  text-align: left !important;
+}
+
+.item-selected {
+  background-color: #fff;
+  padding: 5px !important;
+  top: -10px !important;
+}
+
+.arrow {
+  display: inline-block !important;
+}
+.list-group-element {
+  display: inline-block;
+}
+
+#lineCont {
+  width: 100%;
+  height: 20%;
+}
+.arrow {
+  font-size: 10px;
+  width: 50px;
+  margin-left: 20px;
+}
+#line {
+  height: 2px;
+  // width: 70%;
+  background: #e9ecef;
+  border-radius: 5px;
+  margin: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  position: relative;
+}
+
+#span {
+  display: none;
+  width: 70%;
+  margin: auto;
+  margin-top: 25%;
+  text-align: center;
+  color:  #333;
+}
+
+.circle {
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 15px;
+  position: absolute;
+  top: -7px;
+  cursor: pointer;
+}
+
+.circle:before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background:  #333;
+  position: absolute;
+  border-radius: 100%;
+  top: 2px;
+  left: 2px;
+  display: none;
+}
+
+.popupSpan {
+  font-size: 12px;
+  position: absolute;
+  transition: all 0.1s ease-out;
+  top: -28px;
+  left: 2px;
+  &:nth-last-child(1) {
+    top: -44px !important;
+  }
+}
+.circle.hover:before, .circle.active:before {
+  display: block;
+}
+.circle.hover .popupSpan, .circle.active .popupSpan {
+  display: block;
+}
+.circle.active .popupSpan {
+  top: -40px;
+}

@@ -1,0 +1,405 @@
+<div class="modal-overlay"></div>
+
+<div class="modal welcome-screen" *ngIf="showWelcomeScreen" [ngClass]="showWelcomeScreen ? 'visible' : 'hidden'">
+  <div class="container">
+    <div class="header bg-gradient-primary py-7 py-lg-8 new-header">
+      <div class="header-body text-center mb-7">
+        <div class="row justify-content-center">
+          <div class="col-lg-5 col-md-6">
+            <p class="text-lead text-light">Please select a directory or enter directory path in the input field to
+              visualize the test results.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- Page content -->
+  <div class="container mt--8 pb-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-5 col-md-7">
+        <div class="card bg-secondary shadow border-0">
+          <div class="card-header bg-transparent pb-5">
+            <div class="text-muted text-center mt-2 mb-3"><small>Select</small></div>
+            <div class="btn-wrapper text-center">
+              <input type="file" webkitdirectory directory id="fileLoader" name="files" title="Load File"
+                     style="display: none"
+                     (change)="handleFileInput($event.target.files)"/>
+              <a href="javascript:void(0)" id="btnOpenFileDialog" on-click="openFileDialog();"
+                 class="btn btn-neutral btn-icon btn-i">
+                <span class="btn-inner--icon"><i _ngcontent-c8="" class="ni ni-folder-17"></i></span>
+                <span class="btn-inner--text">Folder</span>
+              </a>
+            </div>
+          </div>
+          <div class="card-body px-lg-5 py-lg-5">
+            <div class="text-center text-muted mb-4">
+              <small>or enter folder path</small>
+            </div>
+            <form role="form" class="example-form" ngNativeValidate>
+              <div class="form-group mb-3">
+                <div class="input-group input-group-alternative">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="ni ni-bold-right"></i></span>
+                  </div>
+                  <input class="form-control" matInput id="inputField" [(ngModel)]="pathValue" placeholder="Enter Path"
+                         name="Path" (keyup.enter)="handlePathInput()" required/>
+                </div>
+              </div>
+              <div class="text-center">
+                <button type="button" class="btn btn-primary my-4 btn-s" id="btnGetInputPath"
+                        on-click="handlePathInput();">Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="separator separator-skew zindex-100">
+      <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1"
+           xmlns="http://www.w3.org/2000/svg">
+        <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>
+      </svg>
+    </div>
+    <button type="button" *ngIf="testsData !== undefined" class="close close-welcome-screen" data-dismiss="alert"
+            aria-label="Close" on-click="hideFolderSelectBox(event);">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+
+
+</div>
+
+<div class="container fixed-top" id="timeLine" [ngClass]="testsData !== undefined ? 'header1' : ''"
+     [ngStyle]="{'visibility': showWelcomeScreen === true ? 'hidden' : 'visible'}"
+>
+  <app-timeline (setActionIdEvent)="sendActionIdEventHandler($event)"></app-timeline>
+</div>
+
+<div class="center-box" *ngIf="loader">
+  <div class="circle-loader">
+  </div>
+</div>
+
+<div class="content">
+  <div class="container ">
+    <div class="row">
+      <div class="errors col-xl-12 col-lg-12 mb-12 mb-xl-0" ngClass="{{getClassForError(errorText.type)}}"
+           *ngIf="errorText">
+              <span class="alert-inner--text"> {{errorText.message}}
+              </span>
+      </div>
+    </div>
+
+    <div class="folder-open-button" *ngIf="!showWelcomeScreen" on-click="showFolderSelectBox(event);"
+         title="Open Folder Select Dialog">
+      <span class="btn-inner--icon"><i class="ni ni-folder-17"></i></span>
+    </div>
+
+    <div class="container " *ngIf="actionTestData!==undefined && !loader">
+      <div class="row">
+        <div class="col-xl-4 col-lg-4 mb-5 mb-xl-0">
+          <div class="card  shadow source-state-conrtainer">
+            <div class="card-header bg-transparent">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h4 class="text-uppercase  mb-0">Source State Image</h4>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <h6 *ngIf="sourceStateImg ===''" class="thead-light not-available">Not Available</h6>
+              <div class="screenshot">
+                <img *ngIf="sourceStateImg !==''" [src]=getSafeImage(sourceStateImg)/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-4 col-lg-4">
+          <div class="card shadow resulting-state-conrtainer">
+            <div class="card-header bg-transparent">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h4 class="text-uppercase  mb-0">Resulting State Image</h4>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <h5 *ngIf="resultingStateImg ===''" class="row thead-light not-available">Not Available</h5>
+              <div class="screenshot">
+                <img *ngIf="resultingStateImg !==''" [src]=getSafeImage(resultingStateImg)/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-4 loc">
+          <div class="card shadow loc-container">
+            <div class="card-header border-0">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h3 class="text-uppercase mb-0">Lines Of Code</h3>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table align-items-center table-flush loc-table">
+                <thead class="thead-light">
+                <tr class="sticky-row">
+                  <th scope="col">Line Number</th>
+                </tr>
+                </thead>
+                <tbody *ngIf="loc && loc?.length > 0 && locMap && locMap.size === actionIds.length">
+                <tr *ngFor="let item of loc; let i = index">
+                  <td id="{{actionId+'_'+item}}" scope="row"
+                      [ngStyle]="{'color': previousOccurrence(item) === false ? 'blue' : 'default'}">
+                    {{item}}
+                  </td>
+                </tr>
+                <tr *ngIf="loc.length === 0" class="thead-light not-available">
+                  <th scope="row">Not Available</th>
+                </tr>
+                </tbody>
+                <tbody *ngIf="loc?.length === 0">
+                <tr class="thead-light not-available">
+                  <td colspan="4">Not Available</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <div class="card card-stats mb-4 mb-xl-0">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col">
+                    <h4 class="text-uppercase  mb-0">Status</h4>
+                  </div>
+                  <div class="col text-right status">
+                    <a class="badge"
+                       [ngClass]="status === 'true' ? 'badge-success' : 'badge-danger'"> {{status === 'true' ? "Success" : "Failed"}}</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-5 widgets">
+        <div class="col-xl-12 mb-5 mb-xl-0">
+          <div class="card shadow">
+            <div class="card-header border-0">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h3 class="text-uppercase mb-0">Widgets</h3>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive widgets-table">
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                <tr>
+                  <th class="firstTh" scope="col">UI Class</th>
+                  <th class="firstTh" scope="col">Displayed Text</th>
+                  <th class="firstTh" scope="col">Hint Text</th>
+                  <th class="firstTh" scope="col">Alternative Text</th>
+                  <th class="firstTh" scope="col">Input-Type</th>
+                  <th class="firstTh" scope="col">Checkable</th>
+                  <th class="firstTh" scope="col">Covers Unique Area</th>
+                  <th class="firstTh" scope="col">Visible Boundaries</th>
+                  <th class="firstTh" scope="col">Defined Boundaries</th>
+                  <th class="firstTh" scope="col">Internal Child-Ids</th>
+                  <th class="firstTh" scope="col">Is Clickable</th>
+                  <th class="firstTh" scope="col">Can be Visible</th>
+                  <th class="firstTh" scope="col">Is Enabled</th>
+                  <th class="firstTh" scope="col">Focus</th>
+                  <th class="firstTh" scope="col">Internal Id</th>
+                  <th class="firstTh" scope="col">Image Id</th>
+                  <th class="firstTh" scope="col">Text Input-Field</th>
+                  <th class="firstTh" scope="col">Is Keyboard-Element</th>
+                  <th class="firstTh" scope="col">Password-Field</th>
+                  <th class="firstTh" scope="col">Is Long-Clickable</th>
+                  <th class="firstTh" scope="col">Package Name</th>
+                  <th class="firstTh" scope="col">Internal ParentId</th>
+                  <th class="firstTh" scope="col">Resource Id</th>
+                  <th class="firstTh" scope="col">Is Scrollable</th>
+                  <th class="firstTh" scope="col">Selected</th>
+                  <th class="firstTh" scope="col">Has Clickable Descendant</th>
+                </tr>
+                <tr *ngIf="interactedWidgetData" class="interacted ">
+                  <th class="secondTh" title="{{interactedWidgetData['UIClass']}}">
+                    {{interactedWidgetData["UIClass"] ? interactedWidgetData["UIClass"] : "none"}}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['DisplayedText']}}">
+                    {{interactedWidgetData["DisplayedText"] ? interactedWidgetData["DisplayedText"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['HintText']}}">
+                    {{interactedWidgetData["HintText"] ? interactedWidgetData["HintText"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['AlternativeText']}}">
+                    {{interactedWidgetData["AlternativeText"] ? interactedWidgetData["AlternativeText"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['Input-Type']}}">
+                    {{interactedWidgetData["Input-Type"] ? interactedWidgetData["Input-Type"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['UIClass']}}">
+                    {{interactedWidgetData["Checkable"] ? interactedWidgetData["Checkable"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['CoversUniqueArea']}}">
+                    {{interactedWidgetData["CoversUniqueArea"] ? interactedWidgetData["CoversUniqueArea"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['VisibleBoundaries']}}">
+                    {{interactedWidgetData["VisibleBoundaries"] ? interactedWidgetData["VisibleBoundaries"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['DefinedBoundaries']}}">
+                    {{interactedWidgetData["DefinedBoundaries"] ? interactedWidgetData["DefinedBoundaries"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['InternalChild-Ids']}}">
+                    {{interactedWidgetData["InternalChild-Ids"] ? interactedWidgetData["InternalChild-Ids"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['IsClickable']}}">
+                    {{interactedWidgetData["IsClickable"] ? interactedWidgetData["IsClickable"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['CanbeVisible']}}">
+                    {{interactedWidgetData["CanbeVisible"] ? interactedWidgetData["CanbeVisible"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['IsEnabled']}}">
+                    {{interactedWidgetData["IsEnabled"] ? interactedWidgetData["IsEnabled"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['Focus']}}">
+                    {{interactedWidgetData["Focus"] ? interactedWidgetData["Focus"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['InternalId']}}">
+                    {{interactedWidgetData["InternalId"] ? interactedWidgetData["InternalId"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['ImageId']}}">
+                    {{interactedWidgetData["ImageId"] ? interactedWidgetData["ImageId"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['TextInput-Field']}}">
+                    {{interactedWidgetData["TextInput-Field"] ? interactedWidgetData["TextInput-Field"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['IsKeyboard-Element']}}">
+                    {{interactedWidgetData["IsKeyboard-Element"] ? interactedWidgetData["IsKeyboard-Element"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['Password-Field']}}">
+                    {{interactedWidgetData["Password-Field"] ? interactedWidgetData["Password-Field"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['IsLong-Clickable']}}">
+                    {{interactedWidgetData["IsLong-Clickable"] ? interactedWidgetData["IsLong-Clickable"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['PackageName']}}">
+                    {{interactedWidgetData["PackageName"] ? interactedWidgetData["PackageName"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['InternalParentId']}}">
+                    {{interactedWidgetData["InternalParentId"] ? interactedWidgetData["InternalParentId"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['ResourceId']}}">
+                    {{interactedWidgetData["ResourceId"] ? interactedWidgetData["ResourceId"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['IsScrollable']}}">
+                    {{interactedWidgetData["IsScrollable"] ? interactedWidgetData["IsScrollable"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['Selected']}}">
+                    {{interactedWidgetData["Selected"] ? interactedWidgetData["Selected"] : "none" }}
+                  </th>
+                  <th class="secondTh" title="{{interactedWidgetData['HasClickableDescendant']}}">
+                    {{interactedWidgetData["HasClickableDescendant"] ? interactedWidgetData["HasClickableDescendant"] : "none" }}
+                  </th>
+                </tr>
+                </thead>
+                <tbody *ngIf="widgets && widgets?.length > 0">
+                <tr *ngFor="let item of widgets; let i = index">
+                  <td scope="row" title="{{item['UIClass']}}">
+                    {{item["UIClass"] ? item["UIClass"] : "none"}}
+                  </td>
+                  <td title="{{item['DisplayedText']}}">
+                    {{item["DisplayedText"] ? item["DisplayedText"] : "none" }}
+                  </td>
+                  <td title="{{item['HintText']}}">
+                    {{item["HintText"] ? item["HintText"] : "none" }}
+                  </td>
+                  <td title="{{item['AlternativeText']}}">
+                    {{item["AlternativeText"] ? item["AlternativeText"] : "none" }}
+                  </td>
+                  <td title="{{item['Input-Type']}}">
+                    {{item["Input-Type"] ? item["Input-Type"] : "none" }}
+                  </td>
+                  <td title="{{item['Checkable']}}">
+                    {{item["Checkable"] ? item["Checkable"] : "none" }}
+                  </td>
+                  <td title="{{item['CoversUniqueArea']}}">
+                    {{item["CoversUniqueArea"] ? item["CoversUniqueArea"] : "none" }}
+                  </td>
+                  <td title="{{item['VisibleBoundaries']}}">
+                    {{item["VisibleBoundaries"] ? item["VisibleBoundaries"] : "none" }}
+                  </td>
+                  <td title="{{item['DefinedBoundaries']}}">
+                    {{item["DefinedBoundaries"] ? item["DefinedBoundaries"] : "none" }}
+                  </td>
+                  <td title="{{item['InternalChild-Ids']}}">
+                    {{item["InternalChild-Ids"] ? item["InternalChild-Ids"] : "none" }}
+                  </td>
+                  <td title="{{item['IsClickable']}}">
+                    {{item["IsClickable"] ? item["IsClickable"] : "none" }}
+                  </td>
+                  <td title="{{item['CanbeVisible']}}">
+                    {{item["CanbeVisible"] ? item["CanbeVisible"] : "none" }}
+                  </td>
+                  <td title="{{item['IsEnabled']}}">
+                    {{item["IsEnabled"] ? item["IsEnabled"] : "none" }}
+                  </td>
+                  <td title="{{item['Focus']}}">
+                    {{item["Focus"] ? item["Focus"] : "none" }}
+                  </td>
+                  <td title="{{item['InternalId']}}">
+                    {{item["InternalId"] ? item["InternalId"] : "none" }}
+                  </td>
+                  <td title="{{item['ImageId']}}">
+                    {{item["ImageId"] ? item["ImageId"] : "none" }}
+                  </td>
+                  <td title="{{item['TextInput-Field']}}">
+                    {{item["TextInput-Field"] ? item["TextInput-Field"] : "none" }}
+                  </td>
+                  <td title="{{item['IsKeyboard-Element']}}">
+                    {{item["IsKeyboard-Element"] ? item["IsKeyboard-Element"] : "none" }}
+                  </td>
+                  <td title="{{item['Password-Field']}}">
+                    {{item["Password-Field"] ? item["Password-Field"] : "none" }}
+                  </td>
+                  <td title="{{item['IsLong-Clickable']}}">
+                    {{item["IsLong-Clickable"] ? item["IsLong-Clickable"] : "none" }}
+                  </td>
+                  <td title="{{item['PackageName']}}">
+                    {{item["PackageName"] ? item["PackageName"] : "none" }}
+                  </td>
+                  <td title="{{item['InternalParentId']}}">
+                    {{item["InternalParentId"] ? item["InternalParentId"] : "none" }}
+                  </td>
+                  <td title="{{item['ResourceId']}}">
+                    {{item["ResourceId"] ? item["ResourceId"] : "none" }}
+                  </td>
+                  <td title="{{item['IsScrollable']}}">
+                    {{item["IsScrollable"] ? item["IsScrollable"] : "none" }}
+                  </td>
+                  <td title="{{item['Selected']}}">
+                    {{item["Selected"] ? item["Selected"] : "none" }}
+                  </td>
+                  <td title="{{item['HasClickableDescendant']}}">
+                    {{item["HasClickableDescendant"] ? item["HasClickableDescendant"] : "none" }}
+                  </td>
+                </tr>
+                </tbody>
+                <tbody *ngIf="widgets?.length === 0">
+                <tr class="thead-light not-available">
+                  <td colspan="4">Not Available</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

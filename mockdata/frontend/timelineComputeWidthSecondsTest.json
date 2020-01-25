@@ -1,0 +1,68 @@
+[
+  {
+    "Difference in": "Start",
+    "StartTime": "2000-01-01T00:00:00.000",
+    "EndTime": "2000-01-01T00:00:00.000",
+    "Action-Id": 0
+  },
+  {
+    "Difference in": "0d 0h 0m 1s 100ms",
+    "StartTime": "2000-01-01T00:00:01.100",
+    "EndTime": "2000-01-01T00:00:00.000",
+    "Action-Id": 1
+  },
+  {
+    "Difference in": "0d 0h 0m 1s 100ms",
+    "StartTime": "2000-01-01T00:00:01.100",
+    "EndTime": "2000-01-01T00:00:00.000",
+    "Action-Id": 2
+  },
+  {
+    "Difference in": "0d 0h 0m 1s 100ms",
+    "StartTime": "2000-01-01T00:00:01.100",
+    "EndTime": "2000-01-01T00:00:00.000",
+    "Action-Id": 3
+  },
+  {
+    "Difference in": "0d 0h 0m 1s 100ms",
+    "StartTime": "2000-01-01T00:00:01.100",
+    "EndTime": "2000-01-01T00:00:00.000",
+    "Action-Id": 4
+  },
+  {
+    "Difference in": "0d 0h 0m 2s 100ms",
+    "StartTime": "2000-01-01T00:00:02.100",
+    "EndTime": "2000-01-01T00:00:00.000",
+    "Action-Id": 5
+  },
+  {
+    "Difference in": "0d 0h 0m 1s 100ms",
+    "StartTime": "2000-01-01T00:00:01.100",
+    "EndTime": "2000-01-01T00:00:00.000",
+    "Action-Id": 6
+  },
+  {
+    "Difference in": "0d 0h 0m 1s 100ms",
+    "StartTime": "2000-01-01T00:00:01.100",
+    "EndTime": "2000-01-01T00:00:00.000",
+    "Action-Id": 7
+  },
+  {
+    "Difference in": "0d 0h 0m 1s 100ms",
+    "StartTime": "2000-01-01T00:00:01.100",
+    "EndTime": "2000-01-01T00:00:00.000",
+    "Action-Id": 8
+  },
+  {
+    "Difference in": "0d 0h 0m 1s 100ms",
+    "StartTime": "2000-01-01T00:00:01.100",
+    "EndTime": "2000-01-01T00:00:00.000",
+    "Action-Id": 9
+  },
+  {
+    "Difference in": "0d 0h 0m 1s 1ms",
+    "StartTime": "2000-01-01T00:00:01.001",
+    "EndTime": "2000-01-01T00:00:00.000",
+    "Action-Id": 10
+  }
+]
